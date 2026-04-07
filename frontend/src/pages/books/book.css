@@ -1,0 +1,62 @@
+.book-container {
+  padding: 30px;
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.controls input,
+.controls select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Grid */
+.book-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+/* Card */
+.book-card {
+  border: 1px solid #eee;
+  padding: 15px;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.book-card h3 {
+  margin: 0;
+}
+
+.book-card p {
+  margin: 5px 0;
+}
+
+/* Category badge */
+.category {
+  font-size: 12px;
+  color: #555;
+}
+
+/* Button */
+.book-card button {
+  margin-top: 10px;
+  padding: 8px;
+  width: 100%;
+  border: none;
+  background: black;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.book-card button:disabled {
+  background: #aaa;
+}

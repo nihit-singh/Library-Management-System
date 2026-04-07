@@ -1,0 +1,65 @@
+/* Container */
+.users-container {
+  padding: 20px;
+  max-width: 1000px;
+  margin: auto;
+}
+
+/* Title */
+.users-container h2 {
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+/* Header */
+th {
+  text-align: left;
+  padding: 12px;
+  border-bottom: 2px solid #ddd;
+  font-weight: 600;
+}
+
+/* Rows */
+td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+/* Row hover */
+tr:hover {
+  background: #f9f9f9;
+}
+
+/* Button */
+button {
+  padding: 6px 12px;
+  border: 1px solid black;
+  background: black;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+/* Button hover */
+button:hover {
+  opacity: 0.85;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  table {
+    font-size: 14px;
+  }
+
+  th, td {
+    padding: 8px;
+  }
+}
