@@ -12,16 +12,39 @@ function Book() {
 
   // ================= FETCH DATA =================
   const fetchData = async () => {
-  try {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    const user = JSON.parse(localStorage.getItem("user"));
+      const user = JSON.parse(localStorage.getItem("user"));
 
-    // 🔥 FIX: handle missing user
-    if (!user || !user.user_id) {
-      console.error("User not found in localStorage");
-      
       const booksData = await bookService.getBooks();
+
+      let transactionData = [];
+
+      if (user && user.user_id) {
+        try {
+          transactionData =
+            await transactionService.getUserTransactions(user.user_id);
+        } catch (err) {
+          console.error("Transaction API error:", err);
+          transactionData = [];
+        }
+      }
+
+      // 🔥 HANDLE ALL STATES
+      const borrowedIds = [];
+      const pendingBorrowIds = [];
+      const pendingReturnIds = [];
+
+      if (Array.isArray(transactionData)) {
+        transactionData.forEach((t) => {
+          if (t.status === "borrowed") borrowedIds.push(t.book_id);
+          if (t.status === "pending_borrow")
+            pendingBorrowIds.push(t.book_id);
+          if (t.status === "pending_return")
+            pendingReturnIds.push(t.book_id);
+        });
+      }
 
       const formatted = booksData.map((b) => ({
         id: b.book_id,
@@ -29,52 +52,25 @@ function Book() {
         author: b.author,
         category: b.category,
         available: b.available_quantity,
-        borrowed: false,
+
+        borrowed: borrowedIds.includes(b.book_id),
+        pendingBorrow: pendingBorrowIds.includes(b.book_id),
+        pendingReturn: pendingReturnIds.includes(b.book_id),
       }));
 
       setBooks(formatted);
       setLoading(false);
-      return;
+    } catch (err) {
+      console.error("Error loading books:", err);
+      setLoading(false);
     }
+  };
 
-    const booksData = await bookService.getBooks();
-
-    let transactionData = [];
-    try {
-  transactionData = await transactionService.getUserTransactions(user.user_id);
-} catch (err) {
-  console.error("Transaction API error:", err); // 👈 ADD THIS
-  transactionData = [];
-}
-
-    const borrowedIds = Array.isArray(transactionData)
-  ? transactionData.map(t => t.book_id)
-  : [];
-
-    const formatted = booksData.map((b) => ({
-      id: b.book_id,
-      title: b.title,
-      author: b.author,
-      category: b.category,
-      available: b.available_quantity,
-      borrowed: borrowedIds.includes(b.book_id),
-    }));
-
-    setBooks(formatted);
-    setLoading(false);
-
-  } catch (err) {
-    console.error("Error loading books:", err);
-    setLoading(false);
-  }
-};
-
-  // ================= LOAD ON START =================
+  // ================= LOAD =================
   useEffect(() => {
-  // eslint-disable-next-line react-hooks/set-state-in-effect
-  fetchData();
-}, []);
-console.log("Books state:", books);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchData();
+  }, []);
 
   // ================= FILTER =================
   const filteredBooks = books.filter((book) => {
@@ -88,34 +84,32 @@ console.log("Books state:", books);
     return matchSearch && matchCategory;
   });
 
-  // ================= BORROW =================
-  const handleBorrow = async (bookId) => {
+  // ================= REQUEST BORROW =================
+  const requestBorrow = async (bookId) => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (!user) return;
 
-    const res = await transactionService.borrowBook({
+    const res = await transactionService.requestBorrow({
       user_id: user.user_id,
       book_id: bookId,
     });
 
     alert(res.message);
-
-    await fetchData(); // refresh without reload
+    await fetchData();
   };
 
-  // ================= RETURN =================
-  const handleReturn = async (bookId) => {
+  // ================= REQUEST RETURN =================
+  const requestReturn = async (bookId) => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (!user) return;
 
-    const res = await transactionService.returnBook({
+    const res = await transactionService.requestReturn({
       user_id: user.user_id,
       book_id: bookId,
     });
 
     alert(res.message);
-
-    await fetchData(); // refresh without reload
+    await fetchData();
   };
 
   // ================= LOADING =================
@@ -160,16 +154,23 @@ console.log("Books state:", books);
               <span className="category">{book.category}</span>
               <p>Available: {book.available}</p>
 
-              {book.borrowed ? (
-                <button onClick={() => handleReturn(book.id)}>
-                  Return
+              {/* 🔥 BUTTON LOGIC */}
+              {book.pendingBorrow ? (
+                <button disabled>Request Sent</button>
+              ) : book.pendingReturn ? (
+                <button disabled>Return Pending</button>
+              ) : book.borrowed ? (
+                <button onClick={() => requestReturn(book.id)}>
+                  Request Return
                 </button>
               ) : (
                 <button
                   disabled={book.available === 0}
-                  onClick={() => handleBorrow(book.id)}
+                  onClick={() => requestBorrow(book.id)}
                 >
-                  {book.available > 0 ? "Borrow" : "Unavailable"}
+                  {book.available > 0
+                    ? "Request Borrow"
+                    : "Unavailable"}
                 </button>
               )}
             </div>

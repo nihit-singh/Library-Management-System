@@ -1,0 +1,96 @@
+.requests-container {
+  padding: 30px;
+  background: #f4f6fb;
+  min-height: 100vh;
+}
+
+.requests-container h2 {
+  margin-bottom: 20px;
+  font-size: 26px;
+  font-weight: 600;
+}
+
+/* Table */
+.requests-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+/* Header */
+.requests-table thead {
+  background: linear-gradient(135deg, #4facfe, #00c6ff);
+  color: white;
+}
+
+.requests-table th {
+  padding: 14px;
+  font-size: 14px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* Rows */
+.requests-table td {
+  padding: 12px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.requests-table tbody tr:nth-child(even) {
+  background: #f9fbff;
+}
+
+.requests-table tbody tr:hover {
+  background: #eef5ff;
+}
+
+/* Status badges */
+.status {
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.pending {
+  background: #ffeaa7;
+  color: #b7791f;
+}
+
+.return {
+  background: #fab1a0;
+  color: #c0392b;
+}
+
+/* Buttons */
+.action-btn {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  margin: 0 5px;
+  font-size: 13px;
+  transition: 0.2s;
+}
+
+.approve {
+  background: #2ecc71;
+  color: white;
+}
+
+.approve:hover {
+  background: #27ae60;
+}
+
+.reject {
+  background: #e74c3c;
+  color: white;
+}
+
+.reject:hover {
+  background: #c0392b;
+}

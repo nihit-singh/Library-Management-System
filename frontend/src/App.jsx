@@ -7,6 +7,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import ManageUsers from "./pages/dashboard/ManageUsers";
 import ManageBooks from "./pages/dashboard/ManageBooks";
 import Transactions from "./pages/dashboard/Transactions";
+import Requests from "./pages/dashboard/Requests";
 
 
 
@@ -21,6 +22,14 @@ function App() {
       <Route path="/dashboard" element={<Dashboard />} />
 <Route path="/dashboard/users" element={<ManageUsers />} />
 <Route path="/dashboard/books" element={<ManageBooks />} />
+<Route
+  path="/dashboard/requests"
+  element={
+    <ProtectedRoute role="admin">
+      <Requests />
+    </ProtectedRoute>
+  }
+/>
 <Route path="/dashboard/transactions" element={<Transactions />} />
       <Route
         path="/dashboard"
