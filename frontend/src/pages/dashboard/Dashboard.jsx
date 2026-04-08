@@ -19,8 +19,8 @@ function Dashboard() {
             Manage Books
           </Link>
 
-          <Link to="/dashboard/transactions" className="card">
-            Transactions
+          <Link to="/dashboard/records" className="card">
+            Records
           </Link>
 
           <Link to="/dashboard/requests" className="card">

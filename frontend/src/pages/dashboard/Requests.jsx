@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
-import transactionService from "../../services/transactionService";
+import recordService from "../../services/recordService";
 import "./requests.css";
 
 function Requests() {
   const [data, setData] = useState([]);
+  const [loadingId, setLoadingId] = useState(null);
 
   const fetchRequests = async () => {
-    const res = await transactionService.getRequests();
+    const res = await recordService.getRequests();
     setData(res);
   };
 
@@ -17,27 +18,45 @@ function Requests() {
 
   const interval = setInterval(() => {
     fetchRequests();
-  }, 5000); // every 5 sec
+  }, 5000);
 
   return () => clearInterval(interval);
 }, []);
 
-  const handleApprove = async (r) => {
-  await transactionService.approveRequest({
-    id: r.transaction_id,
-    type: r.status,
-    book_id: r.book_id,
-  });
+const handleApprove = async (r) => {
+  if (loadingId) return;
 
-  // 🔥 INSTANT REMOVE FROM UI
-  setData(prev => prev.filter(item => item.transaction_id !== r.transaction_id));
+  setLoadingId(r.record_id);
+
+  try {
+    const res = await recordService.approveRequest({
+      id: r.record_id,
+      type: r.status,
+      book_id: r.book_id,
+    });
+
+    console.log("APPROVE RESPONSE:", res);
+
+    setData(prev => prev.filter(item => item.record_id !== r.record_id));
+
+  } catch (err) {
+    console.error("APPROVE ERROR:", err.response?.data || err);
+  }
+
+  setLoadingId(null);
 };
 
 const handleReject = async (id) => {
-  await transactionService.rejectRequest(id);
+  try {
+    const res = await recordService.rejectRequest(id);
 
-  // 🔥 INSTANT REMOVE
-  setData(prev => prev.filter(item => item.transaction_id !== id));
+    alert(res.message);
+
+    setData(prev => prev.filter(item => item.record_id !== id));
+
+  } catch (err) {
+    console.error(err);
+  }
 };
 
   return (
@@ -62,7 +81,7 @@ const handleReject = async (id) => {
 
             <tbody>
               {data.map((r) => (
-                <tr key={r.transaction_id}>
+                <tr key={r.record_id}>
                   <td>{r.user_name}</td>
                   <td>{r.book_title}</td>
 
@@ -80,15 +99,17 @@ const handleReject = async (id) => {
 
                   <td>
                     <button
-  className="action-btn approve"
-  onClick={() => handleApprove(r)}
->
-  Approve
-</button>
+                      className="action-btn approve"
+                      disabled={loadingId === r.record_id}
+                      onClick={() => handleApprove(r)}
+                    >
+                      {loadingId === r.record_id ? "Processing..." : "Approve"}
+                    </button>
 
                     <button
                       className="action-btn reject"
-                      onClick={() => handleReject(r.transaction_id)}
+                      disabled={loadingId === r.record_id}
+                      onClick={() => handleReject(r.record_id)}
                     >
                       Reject
                     </button>

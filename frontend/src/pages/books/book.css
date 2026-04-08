@@ -60,3 +60,22 @@
 .book-card button:disabled {
   background: #aaa;
 }
+
+.status-badge {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 4px 8px;
+  font-size: 12px;
+  border: 1px solid #999;
+  border-radius: 6px;
+  color: #333;
+}
+
+.tag {
+  display: inline-block;
+  margin-right: 6px;
+  padding: 3px 6px;
+  font-size: 11px;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+}

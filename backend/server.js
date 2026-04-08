@@ -9,12 +9,12 @@ app.use(express.json());
 // ✅ IMPORT ROUTES
 const authRoutes = require("./routes/auth");
 const bookRoutes = require("./routes/books");
-const transactionRoutes = require("./routes/transactions");
+const recordRoutes = require("./routes/records");
 
 // ✅ USE ROUTES
 app.use("/api/auth", authRoutes);
 app.use("/api/books", bookRoutes);
-app.use("/api/transactions", transactionRoutes);
+app.use("/api/records", recordRoutes);
 
 // ✅ START SERVER (ALWAYS LAST)
 app.listen(5000, () => {

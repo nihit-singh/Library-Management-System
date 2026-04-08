@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = "http://localhost:5000/api/transactions";
+const API = "http://localhost:5000/api/records";
 
 // ================= REQUESTS =================
 const getRequests = async () => {
@@ -20,12 +20,12 @@ const requestReturn = async (data) => {
   return res.data;
 };
 
-const getAllTransactions = async () => {
+const getAllRecords = async () => {
   const res = await axios.get(API);
   return res.data;
 };
 
-const getUserTransactions = (userId) =>
+const getUserRecords = (userId) =>
   axios.get(`${API}/${userId}`).then(res => res.data);
 
 // 🔹 ADMIN
@@ -44,8 +44,8 @@ const rejectRequest = async (id) => {
 export default {
   requestBorrow,
   requestReturn,
-  getUserTransactions,
-  getAllTransactions,
+  getUserRecords,
+  getAllRecords,
   getRequests,
   approveRequest,
   rejectRequest

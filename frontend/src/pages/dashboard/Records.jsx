@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
-import transactionService from "../../services/transactionService";
-import "./transactions.css";
+import recordService from "../../services/recordService";
+import "./records.css";
 
-function Transactions() {
+function Records() {
   const [data, setData] = useState([]);
 
-  const fetchTransactions = async () => {
+  const fetchRecords = async () => {
     try {
-      const res = await transactionService.getAllTransactions();
+      const res = await recordService.getAllRecords();
       setData(res);
     } catch (err) {
       console.error("Error:", err);
@@ -17,15 +17,22 @@ function Transactions() {
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchTransactions();
-  }, []);
+    fetchRecords();
+    const interval = setInterval(() => {
+    fetchRecords();
+  }, 5000); // every 5 sec
+
+  return () => clearInterval(interval);
+}, []);
+
+  
 
   return (
     <>
       <Navbar />
 
-      <div className="transactions-container">
-        <h2>Transactions</h2>
+      <div className="records-container">
+        <h2>Records</h2>
 
         <table>
           <thead>
@@ -42,7 +49,7 @@ function Transactions() {
 
           <tbody>
             {data.map((t) => (
-              <tr key={t.transaction_id} >
+              <tr key={t.record_id} >
                 <td>{t.user_name}</td>
                 <td>{t.book_title}</td>
                 <td>{t.borrow_date?.split("T")[0]}</td>
@@ -63,4 +70,4 @@ function Transactions() {
   );
 }
 
-export default Transactions;
+export default Records;

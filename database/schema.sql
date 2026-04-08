@@ -1,9 +1,6 @@
 CREATE DATABASE lms;
 USE lms;
 
--- =========================
--- 1. USERS TABLE
--- =========================
 CREATE TABLE users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     sap_id VARCHAR(50) UNIQUE,
@@ -13,9 +10,6 @@ CREATE TABLE users (
     role ENUM('student', 'admin') DEFAULT 'student'
 );
 
--- =========================
--- 2. BOOKS TABLE
--- =========================
 CREATE TABLE books (
     book_id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
@@ -24,11 +18,8 @@ CREATE TABLE books (
     available_quantity INT DEFAULT 1
 );
 
--- =========================
--- 3. TRANSACTIONS TABLE
--- =========================
-CREATE TABLE transactions (
-    transaction_id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE records (
+    record_id INT AUTO_INCREMENT PRIMARY KEY,
     
     user_id INT,
     book_id INT,
@@ -44,13 +35,15 @@ CREATE TABLE transactions (
         ON DELETE CASCADE
 );
 
-CREATE INDEX idx_user ON transactions(user_id);
-CREATE INDEX idx_book ON transactions(book_id);
+CREATE INDEX idx_user ON records(user_id);
+CREATE INDEX idx_book ON records(book_id);
 
 INSERT INTO users (sap_id, name, email, password, role)
 VALUES 
 ('SAP001', 'Admin User', 'admin@gmail.com', '1234', 'admin'),
-('SAP002', 'Student User', 'student@gmail.com', '1234', 'student');
+('SAP0000', 'Student User', 'student@gmail.com', '1234', 'student'),
+('SAP00001', 'Student 1', 'student1@gmail.com', '1234', 'student'),
+('SAP00002', 'Student 2', 'student2@gmail.com', '1234', 'student');
 
 INSERT INTO books (title, author, category, available_quantity)
 VALUES
@@ -59,20 +52,30 @@ VALUES
 ('Operating System', 'Galvin', 'Education', 1),
 ('React JS', 'Meta', 'Programming', 2);
 
+
+SET SQL_SAFE_UPDATES = 0;
+
 ALTER TABLE books
 ADD CONSTRAINT unique_book UNIQUE (title, author);
 
-SELECT * FROM books;
-
-ALTER TABLE transactions 
+ALTER TABLE records 
 ADD COLUMN status VARCHAR(20) DEFAULT 'borrowed';
 
-UPDATE transactions 
+UPDATE records 
 SET status = 'borrowed' 
 WHERE status IS NULL;
 
-ALTER TABLE transactions 
+ALTER TABLE records 
 MODIFY status VARCHAR(20) DEFAULT 'borrowed';
 
-ALTER TABLE transactions
+ALTER TABLE records
 ADD COLUMN return_date DATE NULL;
+
+ALTER TABLE records
+ADD UNIQUE unique_request (user_id, book_id, status);
+
+
+SELECT * FROM books;
+SELECT * FROM users;
+SELECT * FROM records;
+TRUNCATE records;

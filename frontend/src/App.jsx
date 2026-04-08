@@ -6,7 +6,7 @@ import Book from "./pages/books/Book";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ManageUsers from "./pages/dashboard/ManageUsers";
 import ManageBooks from "./pages/dashboard/ManageBooks";
-import Transactions from "./pages/dashboard/Transactions";
+import Records from "./pages/dashboard/Records";
 import Requests from "./pages/dashboard/Requests";
 
 
@@ -30,7 +30,7 @@ function App() {
     </ProtectedRoute>
   }
 />
-<Route path="/dashboard/transactions" element={<Transactions />} />
+<Route path="/dashboard/records" element={<Records />} />
       <Route
         path="/dashboard"
         element={
