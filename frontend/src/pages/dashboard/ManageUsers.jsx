@@ -48,11 +48,14 @@ function ManageUsers() {
                 <td>{u.name}</td>
                 <td>{u.email}</td>
                 <td>{u.role}</td>
-                <td>
-                  <button onClick={() => handleDelete(u.sap_id)}>
-                    Delete
-                  </button>
-                </td>
+                {u.role === "student" && (
+                  <td>
+                    <button onClick={() => handleDelete(u.sap_id)}>
+                      Delete
+                    </button>
+                  </td>
+                )}
+                {u.role !== "student" && <td></td>}
               </tr>
             ))}
           </tbody>
